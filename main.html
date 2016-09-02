@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Shipyard_Assignment</title>
+	<meta charset="UTF-8">
+  <meta name="author" content='Mercurius Lang' />
+  <meta name="description" content="Page for Shipyard interview">
+
+  <!-- CSS -->
+  <link rel="stylesheet" type="text/css" href="css/main.css" />
+  
+  <!-- Javascript -->
+	<script src="http://d3js.org/d3.v3.min.js"></script>
+</head>
+<body>
+
+   <script>
+   
+   //Read initial data, and expand the basic graph structure to the required product.
+   d3.json("graph.json", function(error, graph){
+
+       var len = graph.nodes.length;
+       var len_links = graph.links.length;
+       
+       // Expand Nodes
+       for(var i = len;i < len * 4;i++){
+
+           var temp = {};
+           temp.x = graph.nodes[(i - len) % len].x + 150 * Math.floor(i/ len);
+           temp.y = graph.nodes[(i - len) % len].y;
+           temp.fixed = true;
+           graph.nodes.push(temp);
+         
+       }
+
+       // Expend Links
+       for(var i = len_links;i < len_links * 4;i++){
+
+          var temp_link = {};
+          temp_link.source = graph.links[(i - len_links) % len_links].source + 19 * Math.floor(i/ len_links);
+          temp_link.target = graph.links[(i - len_links) % len_links].target + 19 * Math.floor(i/ len_links);
+          graph.links.push(temp_link);
+
+       }
+
+
+       // Add the tail(graph)
+       graph = addNode(graph,graph.nodes[68].x + 90, graph.nodes[68].y, 68 , 76);
+       graph = addNode(graph,graph.nodes[76].x, 150, 76 , 77);
+       graph = addNode(graph,graph.nodes[76].x, 343, 76 , 78);
+       graph = addNode(graph,graph.nodes[77].x + 50, graph.nodes[77].y, 77 , 79);
+       graph = addNode(graph,graph.nodes[78].x + 50, graph.nodes[78].y, 78 , 80);
+
+       // Call the main function
+       main(graph);
+   });
+   
+   // Main function
+   function main(graph){
+       
+       // Render the link and node.
+       function tick(){
+
+            link.attr("x1", function(d) { return d.source.x; })
+                .attr("y1", function(d) { return d.source.y; })
+                .attr("x2", function(d) { return d.target.x; })
+                .attr("y2", function(d) { return d.target.y; });
+
+            node.attr("cx", function(d) { return d.x; })
+                .attr("cy", function(d) { return d.y; });
+       }
+       
+       // Define the dimensions of the visualization.
+       var width = window.innerWidth || document.documentElement.clientWidth;
+           width = (width <= 900 )?900: width;
+       var height = 480;
+       
+       // Now we create a force layout object and define its properties.
+       var force = d3.layout.force()
+                            .size([width, height])
+                            .on("tick", tick);
+
+       var svg = d3.select("body").append("svg")
+                                  .attr("width", width)
+                                  .attr("height", height)
+
+       var link = svg.selectAll(".link"),
+           node = svg.selectAll(".node");
+      
+       force.nodes(graph.nodes)
+            .links(graph.links)
+            .start();
+
+       link = link.data(graph.links)
+                  .enter().append("line")
+                  .attr("class", "link");
+
+       node = node.data(graph.nodes)
+                  .enter().append("circle")
+                  .attr("class", "node")
+                  .attr("r", function(d){
+                      console.log(d.index);
+                      if(d.index != 76 && d.index !=77 && d.index != 78){
+                         return 4;
+                      }else{
+                         return 0;
+                      }
+                  })
+    }
+    
+
+    function addNode(graph,x,y,source,target){
+
+           var tail_node = {};
+           var tail_link = {};
+           
+           tail_node.x = x;
+           tail_node.y = y;
+           tail_node.fixed = true;
+           graph.nodes.push(tail_node);
+
+           tail_link.source = source;
+           tail_link.target = target;
+           graph.links.push(tail_link);
+
+           return graph;
+    }
+   </script>
+   
+   <div class="cover"></div>
+   <ul class="white-line">
+      <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
+   </ul>
+</body>
+</html>

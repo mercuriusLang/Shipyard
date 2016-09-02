@@ -1,0 +1,41 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+ul,li{
+	text-decoration: none;
+}
+svg{
+    background: black;
+}
+.cover{
+	width: 100%;
+	position: absolute;
+	height: 480px;
+	background: -webkit-linear-gradient(left, rgba(0,0,0,1) 0%,rgba(0,0,0,0) 100%);
+);
+}
+.link {
+    stroke: #fff;
+    stroke-width: 1.5px;
+}
+.node {
+    cursor: move;
+    fill: #ccc;
+    stroke-width: 1.5px;
+}
+.node.fixed {
+    fill: #fff;
+}
+.white-line{
+	position: absolute;
+	left: 779px; 
+	top: 160px;
+    list-style-type: none;
+}
+.white-line li{
+	margin-top: 3px;
+	width: 10px;
+	height: 3px;
+    background: #8A8A8A;
+}
